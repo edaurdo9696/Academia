@@ -30,22 +30,65 @@ $app = AppFactory::create();
 
 $app->get('/', function (Request $request, Response $response, array $args) use ($twig) {
     
-    $template = $twig->load('index.html');
-
+    $template = $twig->load('home.html');
     $response->getBody()->write(
-        $template->render(['name' => 'Dario'])
+        $template->render()
     );
     return $response;
 });
-
-$app->get('/contacto', function (Request $request, Response $response, array $args) use ($twig) {
+$app->post('/logIn', function (Request $request, Response $response, array $args) use($loginService) {
+    // $_SESSION['logueado'] = false; no hace falta porque ya lo hace el LoginService.
+    // $usuario = $_SESSION['nombre'];
+    $usuario = $loginService->login($_POST['nombre'],$_POST['contraseña']);
+    if($usuario instanceof \Tuiter\Models\UserNull){
+        $response = $response->withStatus(302);
+        $response = $response->withHeader('Location','/');
+    }else{
+        $response = $response->withStatus(302);
+        $response = $response->withHeader('Location','/feed');
+    }
+    return $response;
+});
+$app->post('/register', function (Request $request, Response $response, array $args) use($userService) {
     
-    $template = $twig->load('contacto.html');
+    $usuario = $userService->register($_POST['userId'],$_POST['nombre'],$_POST['contraseña']);
+    if($usuario){
+        $response = $response->withStatus(302);
+        $response = $response->withHeader('Location','/');
+    }else{
+        $response = $response->withStatus(302);
+        $response = $response->withHeader('Location','/');
+    }
 
+    return $response;
+    
+
+});
+$app->get('/feed', function (Request $request, Response $response, array $args) use($userService,$followService,$postService) {
+
+    // hay que llamar a todos los post de los usuarios que sigo. 
+    // $usuario = $_SESSION['user'];
+    // $us = $followService->getFollowers($usuario);
+    // $posts = $postService->getAllPosts($usuario);
+    // $posteos = array();
+    // foreach($us as $posts){
+    //     $posteos[] = 
+    // }
+
+
+
+
+
+
+});
+$app->get('/follow{userName}', function (Request $request, Response $response, array $args) use($twig) {
+     
+    $template = $twig->load('follow.username.html');
     $response->getBody()->write(
-        $template->render(['name' => 'Dario'])
+        $template->render()
     );
     return $response;
-});
 
+
+});
 $app->run();

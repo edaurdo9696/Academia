@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action = "/login" method = "Post">
+    <label>insertar nombre</label>  <input type = "text" name = "nombre"/></label><br>
+    <label>insertar contraseña</label>  <input type = "text" name = "contraseña"/></label><br>
+    <input type = "submit" value = "Loguearse"/>
+</form>
+<form action = "/register" method = "Post">
+    <label>insertar nombre</label>  <input type = "text" name = "nombre"/></label><br>
+    <label>insertar contraseña</label>  <input type = "text" name = "contraseña"/></label><br>
+    <input type = "submit" value = "Registrarce"/>
+</form>
+{% endblock %}
